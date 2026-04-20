@@ -7,7 +7,7 @@
 
 inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     {"AccessToken", {CLEAR_ON_MANAGER_START | DONT_LOG, STRING}},
-    {"AdbEnabled", {PERSISTENT | BACKUP, BOOL}},
+    {"AdbEnabled", {PERSISTENT | BACKUP, BOOL, "1"}},       # ORIGINALLY 0   Gem says Yes, you want this (Android Debug Bridge)
     {"AlwaysOnDM", {PERSISTENT | BACKUP, BOOL}},
     {"ApiCache_Device", {PERSISTENT, STRING}},
     {"ApiCache_FirehoseStats", {PERSISTENT, JSON}},
@@ -30,7 +30,7 @@ inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     {"CurrentRoute", {CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION, STRING}},
     {"DisableLogging", {CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION, BOOL}},
     {"DisablePowerDown", {PERSISTENT | BACKUP, BOOL}},
-    {"DisableUpdates", {PERSISTENT | BACKUP, BOOL, "0"}},
+    {"DisableUpdates", {PERSISTENT | BACKUP, BOOL, "1"}},         # ORIGINALLY 0   Shouldn't update now..  Gemini says If u change this to "1" the car stops looking for official updates entirely
     {"DisengageOnAccelerator", {PERSISTENT | BACKUP, BOOL, "0"}},
     {"DongleId", {PERSISTENT, STRING}},
     {"DoReboot", {CLEAR_ON_MANAGER_START, BOOL}},
@@ -38,16 +38,16 @@ inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     {"DoUninstall", {CLEAR_ON_MANAGER_START, BOOL}},
     {"DriverTooDistracted", {CLEAR_ON_MANAGER_START | CLEAR_ON_IGNITION_ON, BOOL}},
     {"AlphaLongitudinalEnabled", {PERSISTENT | DEVELOPMENT_ONLY | BACKUP, BOOL}},
-    {"ExperimentalMode", {PERSISTENT | BACKUP, BOOL}},
-    {"ExperimentalModeConfirmed", {PERSISTENT | BACKUP, BOOL}},
+    {"ExperimentalMode", {PERSISTENT | BACKUP, BOOL, "1"}},            # Originally 0 but you want it on (for now)
+    {"ExperimentalModeConfirmed", {PERSISTENT | BACKUP, BOOL, "1"}},   # Yes, you've seen the scary warning
     {"FirmwareQueryDone", {CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION, BOOL}},
     {"ForcePowerDown", {PERSISTENT, BOOL}},
-    {"GitBranch", {PERSISTENT, STRING}},
+    {"GitBranch", {PERSISTENT, STRING, "master"}},                    # Originally not declared, gem says it's the name of the primary "timeline" of your code
     {"GitCommit", {PERSISTENT, STRING}},
     {"GitCommitDate", {PERSISTENT, STRING}},
     {"GitDiff", {PERSISTENT, STRING}},
     {"GithubSshKeys", {PERSISTENT | BACKUP, STRING}},
-    {"GithubUsername", {PERSISTENT | BACKUP, STRING}},
+    {"GithubUsername", {PERSISTENT | BACKUP, STRING, "delamaran"}},   # Originally not declared, this change is obvious
     {"GitRemote", {PERSISTENT, STRING}},
     {"GsmApn", {PERSISTENT | BACKUP, STRING}},
     {"GsmMetered", {PERSISTENT | BACKUP, BOOL, "1"}},
@@ -106,9 +106,9 @@ inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     {"PandaSomResetTriggered", {CLEAR_ON_MANAGER_START | CLEAR_ON_OFFROAD_TRANSITION, BOOL}},
     {"PandaSignatures", {CLEAR_ON_MANAGER_START, BYTES}},
     {"PrimeType", {PERSISTENT, INT}},
-    {"RecordAudio", {PERSISTENT | BACKUP, BOOL}},
+    {"RecordAudio", {PERSISTENT | BACKUP, BOOL, "0"}},       #  ORIGINALLY DIDN'T SET VALUE   Gemini says 0 means do not record
     {"RecordAudioFeedback", {PERSISTENT | BACKUP, BOOL, "0"}},
-    {"RecordFront", {PERSISTENT | BACKUP, BOOL}},
+    {"RecordFront", {PERSISTENT | BACKUP,  BOOL, "0"}},      #  ORIGINALLY DIDN'T SET VALUE   Gemini says 0 means do not record and Front means 'front of device' which is the side with the screen
     {"RecordFrontLock", {PERSISTENT, BOOL}},  // for the internal fleet
     {"SecOCKey", {PERSISTENT | DONT_LOG | BACKUP, STRING}},
     {"ShowDebugInfo", {PERSISTENT, BOOL}},
@@ -166,7 +166,7 @@ inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     {"IsReleaseSpBranch", {CLEAR_ON_MANAGER_START, BOOL}},
     {"LastGPSPositionLLK", {PERSISTENT, STRING}},
     {"LeadDepartAlert", {PERSISTENT | BACKUP, BOOL, "0"}},
-    {"MaxTimeOffroad", {PERSISTENT | BACKUP, INT, "1800"}},
+    {"MaxTimeOffroad", {PERSISTENT | BACKUP, INT, "999"}},      #  ORIGINALLY 1800 (seconds)  So now it's 16 min 39 sec
     {"ModelRunnerTypeCache", {CLEAR_ON_ONROAD_TRANSITION, INT}},
     {"OffroadMode", {CLEAR_ON_MANAGER_START, BOOL}},
     {"Offroad_TiciSupport", {CLEAR_ON_MANAGER_START, JSON}},
@@ -174,7 +174,7 @@ inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     {"OnroadScreenOffBrightnessMigrated", {PERSISTENT | BACKUP, STRING, "0.0"}},
     {"OnroadScreenOffTimer", {PERSISTENT | BACKUP, INT, "15"}},
     {"OnroadScreenOffTimerMigrated", {PERSISTENT | BACKUP, STRING, "0.0"}},
-    {"OnroadUploads", {PERSISTENT | BACKUP, BOOL, "1"}},
+    {"OnroadUploads", {PERSISTENT | BACKUP, BOOL, "0"}},         #  ORIGINALLY 1
     {"QuickBootToggle", {PERSISTENT | BACKUP, BOOL, "0"}},
     {"QuietMode", {PERSISTENT | BACKUP, BOOL, "0"}},
     {"RainbowMode", {PERSISTENT | BACKUP, BOOL, "0"}},
@@ -259,8 +259,8 @@ inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     // Speed Limit
     {"SpeedLimitMode", {PERSISTENT | BACKUP, INT, "1"}},
     {"SpeedLimitOffsetType", {PERSISTENT | BACKUP, INT, "0"}},
-    {"SpeedLimitPolicy", {PERSISTENT | BACKUP, INT, "3"}},
-    {"SpeedLimitValueOffset", {PERSISTENT | BACKUP, INT, "0"}},
+    {"SpeedLimitPolicy", {PERSISTENT | BACKUP, INT, "2"}},            #  ORIGINALLY 3  (which gemini says means go by OpenStreetMap data)  2 means go by limits seen by camera
+    {"SpeedLimitValueOffset", {PERSISTENT | BACKUP, INT, "9"}},       #  ORIGINALLY 0  Gemini says this will add 9mph to what the camera reads on speed limits signs
 
     // Smart Cruise Control
     {"MapTargetVelocities", {CLEAR_ON_ONROAD_TRANSITION, STRING}},
@@ -275,5 +275,5 @@ inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     {"TorqueControlTune", {PERSISTENT | BACKUP, FLOAT, "0.0"}},
     {"TorqueParamsOverrideEnabled", {PERSISTENT | BACKUP, BOOL, "0"}},
     {"TorqueParamsOverrideFriction", {PERSISTENT | BACKUP, FLOAT, "0.1"}},
-    {"TorqueParamsOverrideLatAccelFactor", {PERSISTENT | BACKUP, FLOAT, "2.5"}},
+    {"TorqueParamsOverrideLatAccelFactor", {PERSISTENT | BACKUP, FLOAT, "2.3"}},   # Originally 2.5  A lower torque may help center car in curves
 };
