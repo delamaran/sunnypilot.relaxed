@@ -53,30 +53,30 @@ T_IDXS_LST = [index_function(idx, max_val=MAX_T, max_idx=N) for idx in range(N+1
 T_IDXS = np.array(T_IDXS_LST)
 FCW_IDXS = T_IDXS < 5.0
 T_DIFFS = np.diff(T_IDXS, prepend=[0.])
-COMFORT_BRAKE = 2.5
+COMFORT_BRAKE = 2.5      # Gemini says DECREASING IT (eg, 2.0) makes comma think "BRAKE MORE GENTLY" - but confirm that, eh?  If too low, may lengthen follow'g dist.
 STOP_DISTANCE = 6.0
-CRUISE_MIN_ACCEL = -1.2
-CRUISE_MAX_ACCEL = 1.6
+CRUISE_MIN_ACCEL = -1.2   # Gemini says CLOSER TO 0 (eg. -0.8) will result in GENTLER BRAKING - but confirm that, eh?
+CRUISE_MAX_ACCEL = 0.55   # ORIGINALLY 1.6   Most recently it was 0.6
 MIN_X_LEAD_FACTOR = 0.5
 
-def get_jerk_factor(personality=log.LongitudinalPersonality.standard):
-  if personality==log.LongitudinalPersonality.relaxed:
-    return 1.0
+def get_jerk_factor(personality=log.LongitudinalPersonality.standard):  # These numbers influence ACCELERATION - higher means gentler
+  if personality==log.LongitudinalPersonality.relaxed:              # BASE CONSTANT FOR ACCEL:  JERK_UP or ACCEL_JERK_UP  Maybe found in longitudinal_planner.py OR drive_helpers.py - lower for gentler
+    return 2.2   # ORIGINALLY 1.0   Most recently it was 1.8
   elif personality==log.LongitudinalPersonality.standard:
-    return 1.0
+    return 2.1   # ORIGINALLY 1.0   Most recently it was 1.5
   elif personality==log.LongitudinalPersonality.aggressive:
-    return 0.5
+    return 2.0   # ORIGINALLY 0.5   Most recently it was 1.2
   else:
     raise NotImplementedError("Longitudinal personality not supported")
 
 
-def get_T_FOLLOW(personality=log.LongitudinalPersonality.standard):
-  if personality==log.LongitudinalPersonality.relaxed:
-    return 1.75
+def get_T_FOLLOW(personality=log.LongitudinalPersonality.standard):    # FOLLOWING DISTANCE:  LOWER = CLOSER
+  if personality==log.LongitudinalPersonality.relaxed:                 # THESE NUMBERS SEEM PRETTY CLOSE TO WHAT YOU WANT
+    return 1.45   # ORIGINALLY 1.75   Most recently it was 1.45
   elif personality==log.LongitudinalPersonality.standard:
-    return 1.45
+    return 1.17   # ORIGINALLY 1.45   Most recently it was 1.17
   elif personality==log.LongitudinalPersonality.aggressive:
-    return 1.25
+    return 0.90   # ORIGINALLY 1.25   Most recently it was 0.90
   else:
     raise NotImplementedError("Longitudinal personality not supported")
 
